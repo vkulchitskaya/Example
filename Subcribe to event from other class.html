@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    <title>Подписка на событие из другого класса</title>
+ <!--
+ 
+ 1) Создаем функцию у котроллера, которая генерирует сообщение и нажатии
+ 2) Создаем функцию в во вью, с параметром-функцией и передаем функцию контроллера в качестве параметра, помещая функцию конроллера в свойтво вью
+ 3) Обращаемся к свойству-функции вью, при подписке на событие.
+ 4) В результате функция контроллера выполняется, когда происходит нажатие во вью, т.е. в другом классе
+ -->
+
+    <script>
+    	class View {
+            constructor(idButton){
+                this.idButton = document.getElementById(idButton);
+                self = this;
+                this.idButton.onclick = function() {
+                var  r =  Math.round(Math.random()*10); 
+                self.onKeyPressed(); /*теперь мы обратились к свойству, которое прописали ниже*/
+                }
+            }
+            bindButtonPressed(handler) { /*создаем функцию у view, принимающую в качестве параметра функцию из вне*/
+                this.onKeyPressed = handler; /*теперь у view в качестве свойства лежит та функция, которую мы передали через параметр*/
+            }
+        }
+
+        class Model{
+            constructor(){
+                this.s = 6;
+            }
+            add(c){
+                this.s=this.s+c;
+            }
+        }
+
+
+        class Controller{
+            constructor(model, view){
+                this.model = model;
+                this.view = view;
+                this.view.bindButtonPressed(this.onKeyPressed); /*обращаеся к функции view и кладем в нее в качестве параметра функцию конструктора*/      
+            }   
+            onKeyPressed() {
+                alert("from controller: button was pressed");
+            }
+        }
+
+var model= new Model();
+var view = new View('addButton');
+var controller = new Controller(model, view);
+
+    </script>
+    </head>
+	<body>
+		<a  id='addButton' href='#'>Добавить</a>
+	</body>
+</html> 

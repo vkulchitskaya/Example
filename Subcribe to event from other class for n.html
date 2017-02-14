@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    <title>Подписка на событие из другого класса для нескольких эземляров</title>
+<!--
+Подписка на событие из другого класса для нескольких эземляров
+Передаем для каждого экземляра свою функцию. В качестве свойства вью выступает массив функций
+-->
+    <script>
+    	class TaskCollection{
+
+  constructor() {
+    this.taskCollection = [];
+  }}
+
+class View {
+  constructor(idButton){
+    this.idButton = document.getElementById(idButton);
+    this.onKeyPressed =[];
+    self = this;
+     this.idButton.onclick = function() {
+        var  r =  Math.round(Math.random()*10); 
+       console.log(self.onKeyPressed);
+      self.onKeyPressed.forEach(function(item){ (item)(); } );
+
+    }
+  }
+  bindButtonPressed(handler) {
+     this.onKeyPressed.push(handler); 
+     self= this;
+     /*console.log(self.onKeyPressed);
+      выводит массив функций*/
+  }
+}
+
+
+class Controller{
+  constructor(model,view,specificFunction){
+    this.model = model;
+    this.view = view;
+    this.specificFunction = specificFunction;
+    self = this;
+    /*console.log(this.view.bindButtonPressed);
+    норм*/
+    this.view.bindButtonPressed(specificFunction); 
+
+  }
+  
+  onKeyPressed() {
+     alert("from controller: button was pressed");
+  }
+}
+var f1=function(){alert("Первая функция");};
+var f2=function(){alert("Вторая функция");};
+var f3=function(){alert("Третья функция");};
+var taskCollection = new TaskCollection();
+var view = new View('addButton');
+var controller1 = new Controller(taskCollection,view,f1);
+var controller2 = new Controller(taskCollection,view,f2);
+var controller3 = new Controller(taskCollection,view,f3);
+
+    </script>
+    </head>
+	<body>
+		<a  id='addButton' href='#'>Добавить</a>
+	</body>
+</html> 
